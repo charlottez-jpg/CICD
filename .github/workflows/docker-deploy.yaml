@@ -26,9 +26,10 @@ jobs:
             docker rm -f "$NAME" || true
             # one-shot run (app.py runs and exits)
             docker run --rm --name "$NAME" \
-            -e MY_USERNAME='${{ secrets.MY_USERNAME }}' \
-            -v /opt/assignments/assignment_outputs/charlottez:/app/data \
-            "$IMAGE"
+              -e MY_USERNAME='${{ secrets.MY_USERNAME }}' \
+              -v /opt/assignments/assignment_outputs/charlottez:/app/data \
+              "$IMAGE" python app.py
+            
 
 # The final block "logs on" to the remote server
 # - gets the latest docker image from the repository
