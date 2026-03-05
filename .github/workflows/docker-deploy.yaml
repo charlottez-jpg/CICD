@@ -19,10 +19,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            docker pull ${{ vars.DOCKER_USERNAME }}/mleng_sayhi:latest
-            docker stop ${{ vars.DOCKER_USERNAME }}/mleng_sayhi || true
-            docker rm ${{ vars.DOCKER_USERNAME }}/mleng_sayhi || true
-            docker run -d --name ${{ vars.DOCKER_USERNAME }}/mleng_sayhi -v /opt/assignments/assignment_outputs/charlottez:/app/data ${{ vars.DOCKER_USERNAME }}/mleng_sayhi:latest
+            set -e
+            IMAGE="${{ vars.DOCKER_USERNAME }}/mleng_sayhi:latest"
+            NAME="mleng_sayhi_run"
+            docker pull "$IMAGE"
+            docker rm -f "$NAME" || true
+            # one-shot run (app.py runs and exits)
+            docker run --rm --name "$NAME" \
+            -e MY_USERNAME='${{ secrets.MY_USERNAME }}' \
+            -v /opt/assignments/assignment_outputs/charlottez:/app/data \
+            "$IMAGE"
 
 # The final block "logs on" to the remote server
 # - gets the latest docker image from the repository
